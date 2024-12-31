@@ -77,7 +77,7 @@ class ProxmoxVEAPI:
 
         try:
             # Base URL for the API (has to end with a `/`, according to aiohttp as of Dec 2024)
-            self.url = URL(url).joinpath(self.api_version, self.api_type) + "/"
+            self.url = URL(url).joinpath(self.api_version, self.api_type)
         except (ValueError, TypeError) as err:
             raise err
 
@@ -92,7 +92,7 @@ class ProxmoxVEAPI:
         self.session = session
         if not self.session:
             self.session = ClientSession(
-                base_url=self.url,
+                base_url=f"{self.url}/",
                 auth=PVEAPITokenAuth(
                     login=f"{self.username}@{self.realm}!{self.api_token_id}",
                     password=self.api_token,
