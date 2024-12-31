@@ -25,7 +25,7 @@ class ProxmoxVEAPI:
         api.access.users.get_users()
 
     When there is a large nested endpoint like `/nodes/{node_id}/qemu/{qemu_id}/firewall/rules/{id}`, nested required path variables
-    are required in the called function, this is modelled as:
+    are required in the called function, this will modelled as (not exisiting just yet):
         api.nodes.qemu.firewall.get_qemu_firewall(node_id=1, qemu_id=2, id=3)
 
     Args:
@@ -37,6 +37,7 @@ class ProxmoxVEAPI:
         api_version:    API Version (only `api2` is currently supported)
         api_type:       API Type (only `json` is currently supported)
         ssl_context:    SSL Context object to pass to the aiohttp session
+        verify_ssl:     Verify SSL Certificates (default: False)
         connector:      Connector object to pass to the aiohttp session (only `TCPConnector` is currently supported)
         session:        ClientSession object to pass if you want to override anything
         kwargs:         kwargs are passed to the ClientSession that is automatically created if `session` is not used
@@ -75,7 +76,8 @@ class ProxmoxVEAPI:
         self.api_type = api_type
 
         try:
-            self.url = URL(url).joinpath(self.api_version, self.api_type)
+            # Base URL for the API (has to end with a `/`, according to aiohttp as of Dec 2024)
+            self.url = URL(url).joinpath(self.api_version, self.api_type) + "/"
         except (ValueError, TypeError) as err:
             raise err
 
