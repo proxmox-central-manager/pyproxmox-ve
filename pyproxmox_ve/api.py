@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 from pyproxmox_ve import exceptions
 from pyproxmox_ve.auth import PVEAPITokenAuth
-from pyproxmox_ve.resources import AccessAPI, NodesAPI, PoolsAPI, StorageAPI, VersionAPI
+from pyproxmox_ve.resources import AccessAPI, NodeAPI, PoolsAPI, StorageAPI, VersionAPI
 
 SUPPORTED_API_VERSIONS = ["api2"]
 SUPPORTED_API_TYPES = ["json"]
@@ -149,10 +149,13 @@ class ProxmoxVEAPI:
 
         # APIs
         self.access = AccessAPI(self)
-        self.nodes = NodesAPI(self)
         self.pools = PoolsAPI(self)
         self.storage = StorageAPI(self)
         self.version = VersionAPI(self)
+
+    def nodes(self, node: str) -> NodeAPI:
+        """Returns the NodeAPI object with the node name set."""
+        return NodeAPI(self, node=node)
 
     async def __aenter__(self) -> ProxmoxVEAPI:
         return self
