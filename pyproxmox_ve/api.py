@@ -42,15 +42,18 @@ class ProxmoxVEAPI:
         url:            ProxmoxVE API Url (eg. https://localhost:8086)
         username:       Username to authenticate with <username>@<realm>
         password:       Password to authenticate with if not using API authentication
+        otp:            One Time Password to authenticate with
         api_token_id:   API Token ID to authenticate with
         api_token:      API Token to authenticate with
         api_version:    API Version (only `api2` is currently supported)
         api_type:       API Type (only `json` is currently supported)
         ssl_context:    SSL Context object to pass to the aiohttp session
+        verify_ssl:     Verify SSL Certificates (default is False)
         connector:      Connector object to pass to the aiohttp session (only `TCPConnector` is currently supported)
         session:        ClientSession object to pass if you want to override anything
         cookie_jar:     CookieJar object to pass if you want to override anything
         use_pydantic:   Use the Pydantic library for data validation and accessing data via Python objects
+        raise_exceptions: Raise exceptions when the API returns an error (default is True)
         kwargs:         kwargs are passed to the ClientSession that is automatically created if `session` is not used
     """
 
@@ -128,7 +131,7 @@ class ProxmoxVEAPI:
 
         if not self.session:
             self.session = ClientSession(
-                base_url=self.url,
+                base_url=f"{self.url}/",
                 auth=self._auth,
                 connector=self.connector,
                 cookie_jar=self.cookie_jar,
