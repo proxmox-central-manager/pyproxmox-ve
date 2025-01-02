@@ -27,16 +27,16 @@ class NodeLxcAPI:
             method="GET",
         )
    
-    async def reboot(self, timeout: Optional[int] = None) -> bool:
+    async def reboot(self, **kwargs) -> bool:
         """Reboot a LXC container.
 
         Args:
             timeout:    Timeout in seconds (optional).
         """
-        await self.api.http_request(
+        await self.api.create(
+            module_model=("pyproxmox_ve.models.lxe", "LxeReboot"),
             endpoint=f"{self.base_endpoint}/status/reboot",
-            method="POST",
-            obj_in=LxeReboot(timeout=timeout),
+            obj_in=kwargs,
             data_key="success"
         )
 
@@ -51,45 +51,45 @@ class NodeLxcAPI:
             data_key="success"
         )
 
-    async def shutdown(self, timeout: Optional[int] = 60, forceStop: Optional[bool] = False) -> bool:
+    async def shutdown(self, **kwargs) -> bool:
         """Shutdown a LXC container.
 
         Args:
             timeout:    Timeout in seconds (optional).
             forceStop:  Force stop the container (optional).
         """
-        await self.api.http_request(
+        await self.api.create(
+            module_model=("pyproxmox_ve.models.lxe", "LxeShutdown"),
             endpoint=f"{self.base_endpoint}/status/shutdown",
-            method="POST",
-            obj_in=LxeShutdown(timeout=timeout, forceStop=forceStop),
+            obj_in=kwargs,
             data_key="success"
         )
     
-    async def start(self, debug: Optional[bool] = False, skiplock: Optional[bool] = None) -> bool:
+    async def start(self, **kwargs) -> bool:
         """Start a LXC container.
 
         Args:
             debug:      Enable debug logging (optional).
             skiplock:   Skip the lock (optional).
         """
-        await self.api.http_request(
+        await self.api.create(
+            module_model=("pyproxmox_ve.models.lxe", "LxeStart"),
             endpoint=f"{self.base_endpoint}/status/start",
-            method="POST",
-            obj_in=LxeStart(debug=debug, skiplock=skiplock),
+            obj_in=kwargs,
             data_key="success"
         )
 
-    async def stop(self, overrule_shutdown: Optional[bool] = False, skiplock: Optional[bool] = None) -> bool:
+    async def stop(self, **kwargs) -> bool:
         """Stop a LXC container.
 
         Args:
             overrule_shutdown:  Overrule the shutdown (optional).
             skiplock:           Skip the lock (optional).
         """
-        await self.api.http_request(
+        await self.api.create(
+            module_model=("pyproxmox_ve.models.lxe", "LxeStop"),
             endpoint=f"{self.base_endpoint}/status/stop",
-            method="POST",
-            obj_in=LxeStop(overrule_shutdown= overrule_shutdown, skiplock=skiplock),
+            obj_in=kwargs,
             data_key="success"
         )
     
