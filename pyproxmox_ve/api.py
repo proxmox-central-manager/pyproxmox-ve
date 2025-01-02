@@ -350,6 +350,9 @@ class ProxmoxVEAPI:
                 automatically use the `module_model` to validate the response.
         """
         data = self._normalize_data(obj_in=obj_in, module_model=module_model)
+        # Some endpoints only have optional data, so we need to check if the data is empty and set it to None, or it will error otherwise
+        if data == '{}':
+            data = None
         r_data = await self.http_request(
             endpoint=endpoint,
             method="POST",
