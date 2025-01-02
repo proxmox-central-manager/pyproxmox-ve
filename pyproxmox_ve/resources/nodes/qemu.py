@@ -33,40 +33,46 @@ class NodeQemuAPI:
     # Created endpoints for: reboot, reset, resume, shutdown, start, stop, suspend
     # using the Models from pyproxmox_ve.models.qemu
 
-    async def reboot(self, timeout: Optional[int] = None) -> None:
+    async def reboot(self, timeout: Optional[int] = None) -> bool:
         """Reboot a qemu.
 
         Args:
             timeout (int, optional): Timeout in seconds. Defaults to None.
         """
-        return await self.api.create(
+        return await self.api.http_request(
             endpoint=f"{self.base_endpoint}/status/reboot",
+            method="POST",
             obj_in=QemuReboot(timeout=timeout),
+            data_key="success"
         )
 
-    async def reset(self, skiplock: Optional[bool] = None) -> None:
+    async def reset(self, skiplock: Optional[bool] = None) -> bool:
         """Reset a qemu.
 
         Args:
         """
-        return await self.api.query(
+        return await self.api.http_request(
             endpoint=f"{self.base_endpoint}/status/reset",
+            method="POST",
             obj_in=QemuReset(skiplock=skiplock),
+            data_key="success"
         )
     
-    async def resume(self, nocheck: Optional[bool] = None, skiplock: Optional[bool] = None) -> None:
+    async def resume(self, nocheck: Optional[bool] = None, skiplock: Optional[bool] = None) -> bool:
         """Resume a qemu.
 
         Args:
             nocheck (bool, optional): Nocheck. Defaults to None.
             skiplock (bool, optional): Skiplock. Defaults to None.
         """
-        return await self.api.create(
+        return await self.api.http_request(
             endpoint=f"{self.base_endpoint}/status/resume",
+            method="POST",
             obj_in=QemuResume(nocheck=nocheck, skiplock=skiplock),
+            data_key="success"
         )
     
-    async def shutdown(self, forceShutdown: Optional[bool] = False, keepAlive: Optional[bool] = False, skiplock: Optional[bool] = None,  timeout: Optional[int] = None,) -> None:
+    async def shutdown(self, forceShutdown: Optional[bool] = False, keepAlive: Optional[bool] = False, skiplock: Optional[bool] = None,  timeout: Optional[int] = None,) -> bool:
         """Shutdown a qemu.
 
         Args:
@@ -75,12 +81,14 @@ class NodeQemuAPI:
             skiplock (bool, optional): Skiplock. Defaults to None.
             timeout (int, optional): Timeout in seconds. Defaults to None.
         """
-        return await self.api.create(
+        return await self.api.http_request(
             endpoint=f"{self.base_endpoint}/status/shutdown",
+            method="POST",
             obj_in=QemuShutdown(forceShutdown=forceShutdown, keepAlive=keepAlive, skiplock=skiplock, timeout=timeout),
+            data_key="success"
         )
 
-    async def start (self, forceCpu: Optional[str] = None, machine: Optional[str] = None, migratedFrom: Optional[str] = None, migrationNetwork: Optional[str] = None, migrationType: Optional[str] = None, skiplock: Optional[bool] = None, stateUri: Optional[str] = None, targetStorage: Optional[str] = None, timeout: Optional[int] = None) -> None:
+    async def start (self, forceCpu: Optional[str] = None, machine: Optional[str] = None, migratedFrom: Optional[str] = None, migrationNetwork: Optional[str] = None, migrationType: Optional[str] = None, skiplock: Optional[bool] = None, stateUri: Optional[str] = None, targetStorage: Optional[str] = None, timeout: Optional[int] = None) -> bool:
         """Start a qemu.
 
         Args:
@@ -94,12 +102,14 @@ class NodeQemuAPI:
             targetStorage (str, optional): Mapping from source to target storages. Providing only a single storage ID maps all source storages to that storage. Providing the special value '1' will map each source storage to itself. Defaults to None.
             timeout (int, optional): Wait maximal timeout seconds. Defaults to None.
         """
-        return await self.api.create(
+        return await self.api.http_request(
             endpoint=f"{self.base_endpoint}/status/start",
+            method="POST",
             obj_in=QemuStart(forceCpu=forceCpu, machine=machine, migratedFrom=migratedFrom, migrationNetwork=migrationNetwork, migrationType=migrationType, skiplock=skiplock, stateUri=stateUri, targetStorage=targetStorage, timeout=timeout),
+            data_key="success"
         )
     
-    async def stop(self, forceStop: Optional[bool] = False, keepActive: Optional[bool] = False, migratedFrom: Optional[str] = None, overruleShutdown: Optional[bool] = False, skiplock: Optional[bool] = None, timeout: Optional[int] = None) -> None:
+    async def stop(self, forceStop: Optional[bool] = False, keepActive: Optional[bool] = False, migratedFrom: Optional[str] = None, overruleShutdown: Optional[bool] = False, skiplock: Optional[bool] = None, timeout: Optional[int] = None) -> bool:
         """Stop a qemu.
 
         Args:
@@ -110,12 +120,14 @@ class NodeQemuAPI:
             skiplock (bool, optional): Ignore locks - only root is allowed to use this option. Defaults to None.
             timeout (int, optional): Wait maximal timeout seconds. Defaults to None.
         """
-        return await self.api.create(
+        return await self.api.http_request(
             endpoint=f"{self.base_endpoint}/status/stop",
+            method="POST",
             obj_in=QemuStop(forceStop=forceStop, keepActive=keepActive, migratedFrom=migratedFrom, overruleShutdown=overruleShutdown, skiplock=skiplock, timeout=timeout),
+            data_key="success"
         )
 
-    async def suspend(self, skiplock: Optional[bool] = None, statestorage: Optional[str] = None, todisk: Optional[bool] = False) -> None:
+    async def suspend(self, skiplock: Optional[bool] = None, statestorage: Optional[str] = None, todisk: Optional[bool] = False) -> bool:
         """Suspend a qemu.
         
         Args:
@@ -123,7 +135,9 @@ class NodeQemuAPI:
             statestorage (str, optional): The storage for the VM state. Defaults to None.
             todisk (bool, optional): If set, suspends the VM to disk. Will be resumed on next VM start. Defaults to None.
         """
-        return await self.api.create(
+        return await self.api.http_request(
             endpoint=f"{self.base_endpoint}/status/suspend",
+            method="POST",
             obj_in=QemuSuspend(skiplock=skiplock, statestorage=statestorage, todisk=todisk),
+            data_key="success"
         )

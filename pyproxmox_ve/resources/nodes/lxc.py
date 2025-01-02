@@ -27,15 +27,17 @@ class NodeLxcAPI:
             method="GET",
         )
    
-    async def reboot(self, timeout: Optional[int] = None) -> None:
+    async def reboot(self, timeout: Optional[int] = None) -> bool:
         """Reboot a LXC container.
 
         Args:
             timeout:    Timeout in seconds (optional).
         """
-        await self.api.create(
+        await self.api.http_request(
             endpoint=f"{self.base_endpoint}/status/reboot",
+            method="POST",
             obj_in=LxeReboot(timeout=timeout),
+            data_key="success"
         )
 
     async def resume(self) -> None:
@@ -43,51 +45,61 @@ class NodeLxcAPI:
 
         Args:
         """
-        await self.api.create(
+        await self.api.http_request(
             endpoint=f"{self.base_endpoint}/status/resume",
+            method="POST",
+            data_key="success"
         )
 
-    async def shutdown(self, timeout: Optional[int] = 60, forceStop: Optional[bool] = False) -> None:
+    async def shutdown(self, timeout: Optional[int] = 60, forceStop: Optional[bool] = False) -> bool:
         """Shutdown a LXC container.
 
         Args:
             timeout:    Timeout in seconds (optional).
             forceStop:  Force stop the container (optional).
         """
-        await self.api.create(
+        await self.api.http_request(
             endpoint=f"{self.base_endpoint}/status/shutdown",
+            method="POST",
             obj_in=LxeShutdown(timeout=timeout, forceStop=forceStop),
+            data_key="success"
         )
     
-    async def start(self, debug: Optional[bool] = False, skiplock: Optional[bool] = None) -> None:
+    async def start(self, debug: Optional[bool] = False, skiplock: Optional[bool] = None) -> bool:
         """Start a LXC container.
 
         Args:
             debug:      Enable debug logging (optional).
             skiplock:   Skip the lock (optional).
         """
-        await self.api.create(
+        await self.api.http_request(
             endpoint=f"{self.base_endpoint}/status/start",
+            method="POST",
             obj_in=LxeStart(debug=debug, skiplock=skiplock),
+            data_key="success"
         )
 
-    async def stop(self, overrule_shutdown: Optional[bool] = False, skiplock: Optional[bool] = None) -> None:
+    async def stop(self, overrule_shutdown: Optional[bool] = False, skiplock: Optional[bool] = None) -> bool:
         """Stop a LXC container.
 
         Args:
             overrule_shutdown:  Overrule the shutdown (optional).
             skiplock:           Skip the lock (optional).
         """
-        await self.api.create(
+        await self.api.http_request(
             endpoint=f"{self.base_endpoint}/status/stop",
+            method="POST",
             obj_in=LxeStop(overrule_shutdown= overrule_shutdown, skiplock=skiplock),
+            data_key="success"
         )
     
-    async def suspend(self) -> None:
+    async def suspend(self) -> bool:
         """Suspend a LXC container.
 
         Args:
         """
-        await self.api.create(
+        await self.api.http_request(
             endpoint=f"{self.base_endpoint}/status/suspend",
+            method="POST",
+            data_key="success"
         )
